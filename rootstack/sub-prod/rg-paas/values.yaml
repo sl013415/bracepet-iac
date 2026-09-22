@@ -1,0 +1,54 @@
+environment: sub-prod
+location: eastus
+
+resource_group:
+  name: rg-paas
+
+remote_state:
+  resource_group_name: rg-tfstate
+  storage_account_name: stbreacepettfsubprod
+  container_name: tfstate
+  network_key: sub-prod/rg-net.tfstate
+
+tags:
+  application: breacepet
+  environment: sub-prod
+  managed_by: terraform
+  owner: platform-team
+  cost_center: engineering
+
+acr:
+  name: acrbreacepetsubprod
+  sku: Basic
+  admin_enabled: false
+
+aks:
+  name: aks-breacepet-sub-prod
+  dns_prefix: aks-breacepet-sub-prod
+  kubernetes_version: "1.30"
+  node_resource_group: rg-paas-nodes
+  network_plugin: azure
+  network_policy: azure
+  service_cidr: 10.50.0.0/16
+  dns_service_ip: 10.50.0.10
+  docker_bridge_cidr: 170.10.0.1/16
+  workload_identity_enabled: true
+  oidc_issuer_enabled: true
+  default_node_pool:
+    name: system
+    node_count: 2
+    vm_size: Standard_D2s_v5
+    os_disk_size_gb: 64
+    enable_auto_scaling: true
+    min_count: 1
+    max_count: 3
+
+static_web_app:
+  name: swa-breacepet-sub-prod
+  location: eastus2
+  sku_tier: Free
+  sku_size: Free
+
+monitoring:
+  name: law-breacepet-sub-prod
+  retention_in_days: 30
