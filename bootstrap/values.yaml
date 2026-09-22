@@ -1,0 +1,18 @@
+location: eastus
+
+resource_group:
+  name: rg-tfstate
+
+storage_account:
+  # Must be globally unique, lowercase, and 3-24 characters.
+  name: stbreacepettfsubprod
+  container_name: tfstate
+  replication_type: LRS
+  blob_delete_retention_days: 30
+  container_delete_retention_days: 30
+
+tags:
+  application: breacepet
+  environment: platform
+  managed_by: terraform
+  owner: platform-team

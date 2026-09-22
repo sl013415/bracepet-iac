@@ -1,0 +1,44 @@
+environment: sub-prod
+location: eastus
+
+resource_group:
+  name: rg-net
+
+remote_state:
+  resource_group_name: rg-tfstate
+  storage_account_name: stbreacepettfsubprod
+  container_name: tfstate
+  bootstrap_key: bootstrap.tfstate
+
+tags:
+  application: breacepet
+  environment: sub-prod
+  managed_by: terraform
+  owner: platform-team
+  cost_center: engineering
+
+network:
+  vnet_name: vnet-breacepet-sub-prod
+  address_space:
+    - 10.20.0.0/16
+  enable_nat_gateway: true
+  private_dns_zones:
+    - privatelink.postgres.database.azure.com
+    - privatelink.vaultcore.azure.net
+    - privatelink.blob.core.windows.net
+
+  subnets:
+    aks:
+      name: snet-aks
+      address_prefixes:
+        - 10.20.1.0/24
+
+    postgres:
+      name: snet-postgres
+      address_prefixes:
+        - 10.20.2.0/24
+
+    private_endpoints:
+      name: snet-private-endpoints
+      address_prefixes:
+        - 10.20.3.0/24
